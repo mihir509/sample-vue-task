@@ -76,7 +76,6 @@ export default {
       ]
     };
     this.blocks = jsonData.blocks;
-    // Initialize formData with invalid and touched flags
     this.blocks.forEach(block => {
       this.formData[block.token + '_invalid'] = false;
       this.formData[block.token + '_touched'] = false;
@@ -84,7 +83,6 @@ export default {
   },
   methods: {
     submitForm() {
-      // Mark all fields as touched to trigger validation message display
       for (const block of this.blocks) {
         this.formData[block.token + '_touched'] = true;
       }
@@ -100,17 +98,14 @@ export default {
       for (const block of this.blocks) {
         if (block.props.required && !this.formData[block.token]) {
           isValid = false;
-          // Set invalid flag for the field
           this.formData[block.token + '_invalid'] = true;
         } else {
-          // Set valid flag for the field
           this.formData[block.token + '_invalid'] = false;
         }
       }
       return isValid;
     },
     touchField(token) {
-      // Mark the field as touched
       this.formData[token + '_touched'] = true;
     },
     goBack() {
@@ -119,7 +114,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-/* Add custom styles if needed */
-</style>
