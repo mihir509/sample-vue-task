@@ -9,8 +9,8 @@
               <div class="mb-3">
                 <template v-if="block.type === 'text'">
                   <label :for="block.props.title" class="form-label">{{ block.props.title }}</label>
-                  <input type="text" class="form-control" :placeholder="block.props.placeholder" v-model="formData[block.token]" :required="block.props.required" />
-                  <div class="invalid-feedback" v-if="block.props.required && !formData[block.token]">Field is required</div>
+                  <input type="text" class="form-control" :placeholder="block.props.placeholder" v-model="formData[block.token]" :required="block.props.required" :class="{ 'is-invalid': formData[block.token + '_touched'] && formData[block.token + '_invalid'] }" @input="touchField(block.token)" />
+                  <div class="invalid-feedback">Field is required</div>
                 </template>
                 <template v-else-if="block.type === 'checkbox'">
                   <div class="form-check">
@@ -20,15 +20,15 @@
                 </template>
                 <template v-else-if="block.type === 'date'">
                   <label :for="block.props.title" class="form-label">{{ block.props.title }}</label>
-                  <input type="date" class="form-control" :placeholder="block.props.placeholder" v-model="formData[block.token]" :required="block.props.required" />
-                  <div class="invalid-feedback" v-if="block.props.required && !formData[block.token]">Field is required</div>
+                  <input type="date" class="form-control" :placeholder="block.props.placeholder" v-model="formData[block.token]" :required="block.props.required" :class="{ 'is-invalid': formData[block.token + '_touched'] && formData[block.token + '_invalid'] }" @input="touchField(block.token)" />
+                  <div class="invalid-feedback">Field is required</div>
                 </template>
               </div>
             </div>
             <div>
-            <button type="submit" class="btn btn-primary me-3">Submit</button>
-            <button type="button" class="btn btn-dark" @click="goBack">Back</button>
-          </div>
+              <button type="submit" class="btn btn-primary me-3">Submit</button>
+              <button type="button" class="btn btn-dark" @click="goBack">Back</button>
+            </div>
           </form>
         </div>
       </div>
@@ -76,25 +76,45 @@ export default {
       ]
     };
     this.blocks = jsonData.blocks;
+    // Initialize formData with invalid and touched flags
+    this.blocks.forEach(block => {
+      this.formData[block.token + '_invalid'] = false;
+      this.formData[block.token + '_touched'] = false;
+    });
   },
   methods: {
     submitForm() {
+      // Mark all fields as touched to trigger validation message display
+      for (const block of this.blocks) {
+        this.formData[block.token + '_touched'] = true;
+      }
+      
       if (this.validateForm()) {
-        alert("Form submitted:",this.formData)
+        alert("Form submitted:", this.formData);
       } else {
-        alert('Form validation failed!')
+        // alert('Form validation failed!')
       }
     },
     validateForm() {
+      let isValid = true;
       for (const block of this.blocks) {
         if (block.props.required && !this.formData[block.token]) {
-          return false;
+          isValid = false;
+          // Set invalid flag for the field
+          this.formData[block.token + '_invalid'] = true;
+        } else {
+          // Set valid flag for the field
+          this.formData[block.token + '_invalid'] = false;
         }
       }
-      return true;
+      return isValid;
     },
-    goBack(){
-      this.$router.push('/')
+    touchField(token) {
+      // Mark the field as touched
+      this.formData[token + '_touched'] = true;
+    },
+    goBack() {
+      this.$router.push('/');
     }
   }
 };
