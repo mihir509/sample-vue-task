@@ -68,7 +68,7 @@ export default {
           "token": "PERSON_DOB",
           "type": "date",
           "props": {
-            "title": "Enter Your BOD",
+            "title": "Enter Your DOB",
             "required": "IS_PERSON_MINOR",
             "placeholder": "e.g 01/01/2000"
           }

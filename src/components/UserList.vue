@@ -36,6 +36,9 @@ export default {
       return this.paginatedUsers.filter(user => 
         user.name.toLowerCase().includes(this.searchFilter.toLowerCase())
         || user.email.toLowerCase().includes(this.searchFilter.toLowerCase())
+        || user.phone.toLowerCase().includes(this.searchFilter.toLowerCase()) 
+        || user.website.toLowerCase().includes(this.searchFilter.toLowerCase())
+        || user.company.name.toLowerCase().includes(this.searchFilter.toLowerCase())
       );
     }
   }
