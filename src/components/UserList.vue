@@ -3,14 +3,22 @@
       <table class="table">
       <thead>
         <tr>
+          <th>No</th>
           <th>Name</th>
           <th>Email</th>
+          <th>Phone</th>
+          <th>Website</th>
+          <th>Company Name</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="user in filteredPaginatedUsers" :key="user.id">
+          <td>{{ user.id }}</td>
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
+          <td>{{ user.phone }}</td>
+          <td>{{ user.website }}</td>
+          <td>{{ user.company.name }}</td>
         </tr>
       </tbody>
     </table>
