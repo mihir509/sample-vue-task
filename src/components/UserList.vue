@@ -30,17 +30,33 @@ import { mapState, mapGetters } from 'vuex';
 
 export default {
   computed: {
-    ...mapState(['currentPage', 'searchFilter']),
-    ...mapGetters(['paginatedUsers']),
-    filteredPaginatedUsers() {
-      return this.paginatedUsers.filter(user => 
-        user.name.toLowerCase().includes(this.searchFilter.toLowerCase())
-        || user.email.toLowerCase().includes(this.searchFilter.toLowerCase())
-        || user.phone.toLowerCase().includes(this.searchFilter.toLowerCase()) 
-        || user.website.toLowerCase().includes(this.searchFilter.toLowerCase())
-        || user.company.name.toLowerCase().includes(this.searchFilter.toLowerCase())
-      );
+  ...mapState(['currentPage', 'searchFilter']),
+  ...mapGetters(['paginatedUsers']),
+  filteredPaginatedUsers() {
+    // Add guard clause to check if searchFilter is initialized
+    if (!this.searchFilter || !this.searchFilter.searchTerm) {
+      return this.paginatedUsers;
     }
+
+    const searchTerm = this.searchFilter.searchTerm.toLowerCase();
+    const filter = this.searchFilter.selectedFilter;
+
+    return this.paginatedUsers.filter(user => {
+      if (filter === 'All') {
+        return (
+          user.name.toLowerCase().includes(searchTerm) ||
+          user.email.toLowerCase().includes(searchTerm) ||
+          user.phone.toLowerCase().includes(searchTerm) ||
+          user.website.toLowerCase().includes(searchTerm) ||
+          user.company.name.toLowerCase().includes(searchTerm)
+        );
+      } else if (filter === 'User') {
+        return user.name.toLowerCase().includes(searchTerm) || user.email.toLowerCase().includes(searchTerm);
+      } else if (filter === 'Phone') {
+        return user.phone.toLowerCase().includes(searchTerm);
+      }
+    });
   }
+}
 }
 </script>

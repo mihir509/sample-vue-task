@@ -29,14 +29,31 @@ export default {
         UserPagination
     },
     computed: {
-        ...mapState(['users', 'currentPage', 'totalPages', 'searchFilter']),
-        filteredUsers() {
-            return this.users.filter(user =>
-                user.name.toLowerCase().includes(this.searchFilter.toLowerCase())
-                || user.email.toLowerCase().includes(this.searchFilter.toLowerCase())
-            );
-        }
-    },
+  ...mapState(['users', 'currentPage', 'totalPages', 'searchFilter']),
+  filteredUsers() {
+    if (!this.searchFilter) {
+      return [];
+    }
+    const searchTerm = this.searchFilter.searchTerm.toLowerCase();
+    const filter = this.searchFilter.selectedFilter;
+
+    return this.users.filter(user => {
+      if (filter === 'All') {
+        return (
+          user.name.toLowerCase().includes(searchTerm) ||
+          user.email.toLowerCase().includes(searchTerm) ||
+          user.phone.toLowerCase().includes(searchTerm) ||
+          user.website.toLowerCase().includes(searchTerm) ||
+          user.company.name.toLowerCase().includes(searchTerm)
+        );
+      } else if (filter === 'User') {
+        return user.name.toLowerCase().includes(searchTerm) || user.email.toLowerCase().includes(searchTerm);
+      } else if (filter === 'Phone') {
+        return user.phone.toLowerCase().includes(searchTerm);
+      }
+    });
+  }
+},
     methods: {
         updatePage(page) {
             this.$store.dispatch('updatePage', page);
