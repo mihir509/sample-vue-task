@@ -23,7 +23,8 @@ export default createStore({
     },
     SET_SEARCH_FILTER(state, filter) {
       state.searchFilter = filter;
-    }
+      state.currentPage = 1;
+      }
   },
   actions: {
     async fetchUsers({ commit }) {
